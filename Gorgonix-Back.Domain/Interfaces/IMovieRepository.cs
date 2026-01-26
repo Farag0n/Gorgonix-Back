@@ -4,16 +4,16 @@ namespace Gorgonix_Back.Domain.Interfaces;
 
 public interface IMovieRepository
 {
-    Task<IEnumerable<Movie>> GetAllAsync();
-    Task<IEnumerable<Movie>> SearchAsync(string? name, string? genre);
-    Task<Movie?> GetByIdAsync(Guid id);
-    Task AddAsync(Movie movie);
-    Task UpdateAsync(Movie movie);
-    Task DeleteAsync(Movie movie);
+    Task<IEnumerable<Content>> GetAllAsync();
+    Task<IEnumerable<Content>> SearchAsync(string? name, string? genre);
+    Task<Content?> GetByIdAsync(Guid id);
+    Task AddAsync(Content content);
+    Task UpdateAsync(Content content);
+    Task DeleteAsync(Content content);
     
     // Métodos para favoritos
-    Task AddFavoriteAsync(UserFavorite favorite);
+    Task AddFavoriteAsync(Favorite favorite);
     Task RemoveFavoriteAsync(Guid userId, Guid movieId);
-    Task<IEnumerable<Movie>> GetFavoritesByUserIdAsync(Guid userId);
+    Task<IEnumerable<Content>> GetFavoritesByUserIdAsync(Guid userId);
     Task<bool> IsFavoriteAsync(Guid userId, Guid movieId);
 }

@@ -32,7 +32,7 @@ public class MovieService : IMovieService
             
             var videoResult = await _photoService.AddVideoAsync(dto.VideoFile); 
             
-            var movie = new Movie(
+            var movie = new Content(
                 dto.Title, 
                 dto.Description, 
                 dto.Genre, 
@@ -177,7 +177,7 @@ public class MovieService : IMovieService
             }
             else
             {
-                await _movieRepository.AddFavoriteAsync(new UserFavorite 
+                await _movieRepository.AddFavoriteAsync(new Favorite 
                 { 
                     UserId = userId, 
                     MovieId = movieId 
@@ -191,7 +191,7 @@ public class MovieService : IMovieService
         }
     }
 
-    private async Task<IEnumerable<MovieResponseDto>> ProcessMoviesWithFavorites(IEnumerable<Movie> movies, Guid userId)
+    private async Task<IEnumerable<MovieResponseDto>> ProcessMoviesWithFavorites(IEnumerable<Content> movies, Guid userId)
     {
         try
         {
@@ -210,16 +210,16 @@ public class MovieService : IMovieService
         }
     }
 
-    private MovieResponseDto MapToDto(Movie movie, bool isFavorite)
+    private MovieResponseDto MapToDto(Content content, bool isFavorite)
     {
         return new MovieResponseDto
         {
-            Id = movie.Id,
-            Title = movie.Title,
-            Description = movie.Description,
-            Genre = movie.Genre,
-            PosterUrl = movie.PosterUrl,
-            VideoUrl = movie.VideoUrl,
+            Id = content.Id,
+            Title = content.Title,
+            Description = content.Description,
+            Genre = content.Genre,
+            PosterUrl = content.PosterUrl,
+            VideoUrl = content.VideoUrl,
             IsFavorite = isFavorite
         };
     }

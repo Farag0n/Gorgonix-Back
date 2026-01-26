@@ -10,8 +10,8 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options){}
     
     public DbSet<User> Users { get; set; }
-    public DbSet<Movie> Movies { get; set; }
-    public DbSet<UserFavorite> UserFavorites { get; set; }
+    public DbSet<Content> Movies { get; set; }
+    public DbSet<Favorite> UserFavorites { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,19 +22,19 @@ public class AppDbContext : DbContext
         //TODO refactorizar esto, dejarlo asi para testear
         
         // Configuración de Movie
-        modelBuilder.Entity<Movie>().HasKey(m => m.Id);
+        modelBuilder.Entity<Content>().HasKey(m => m.Id);
         
         // Configuración de Favoritos (Many-to-Many)
-        modelBuilder.Entity<UserFavorite>()
+        modelBuilder.Entity<Favorite>()
             .HasKey(uf => new { uf.UserId, uf.MovieId });
 
-        modelBuilder.Entity<UserFavorite>()
+        modelBuilder.Entity<Favorite>()
             .HasOne(uf => uf.User)
             .WithMany()
             .HasForeignKey(uf => uf.UserId);
         //TODO navegacion de user a favoritos
-        modelBuilder.Entity<UserFavorite>()
-            .HasOne(uf => uf.Movie)
+        modelBuilder.Entity<Favorite>()
+            .HasOne(uf => uf.Content)
             .WithMany(m => m.FavoritedBy)
             .HasForeignKey(uf => uf.MovieId);
     }

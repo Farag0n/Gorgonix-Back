@@ -14,9 +14,9 @@ public class MovieRepository : IMovieRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Movie>> GetAllAsync() => await _context.Movies.ToListAsync();
+    public async Task<IEnumerable<Content>> GetAllAsync() => await _context.Movies.ToListAsync();
 
-    public async Task<IEnumerable<Movie>> SearchAsync(string? name, string? genre)
+    public async Task<IEnumerable<Content>> SearchAsync(string? name, string? genre)
     {
         var query = _context.Movies.AsQueryable();
 
@@ -29,28 +29,28 @@ public class MovieRepository : IMovieRepository
         return await query.ToListAsync();
     }
 
-    public async Task<Movie?> GetByIdAsync(Guid id) => await _context.Movies.FindAsync(id);
+    public async Task<Content?> GetByIdAsync(Guid id) => await _context.Movies.FindAsync(id);
 
-    public async Task AddAsync(Movie movie)
+    public async Task AddAsync(Content content)
     {
-        await _context.Movies.AddAsync(movie);
+        await _context.Movies.AddAsync(content);
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(Movie movie)
+    public async Task UpdateAsync(Content content)
     {
-        _context.Movies.Update(movie);
+        _context.Movies.Update(content);
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(Movie movie)
+    public async Task DeleteAsync(Content content)
     {
-        _context.Movies.Remove(movie);
+        _context.Movies.Remove(content);
         await _context.SaveChangesAsync();
     }
 
     // Favoritos
-    public async Task AddFavoriteAsync(UserFavorite favorite)
+    public async Task AddFavoriteAsync(Favorite favorite)
     {
         await _context.UserFavorites.AddAsync(favorite);
         await _context.SaveChangesAsync();
@@ -68,7 +68,7 @@ public class MovieRepository : IMovieRepository
         }
     }
 
-    public async Task<IEnumerable<Movie>> GetFavoritesByUserIdAsync(Guid userId)
+    public async Task<IEnumerable<Content>> GetFavoritesByUserIdAsync(Guid userId)
     {
         return await _context.UserFavorites
             .Where(f => f.UserId == userId)
