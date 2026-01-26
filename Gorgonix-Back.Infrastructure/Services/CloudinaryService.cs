@@ -30,7 +30,7 @@ public class CloudinaryService : IPhotoService
             var uploadParams = new ImageUploadParams
             {
                 File = new FileDescription(file.FileName, stream),
-                Transformation = new Transformation().Height(500).Width(500).Crop("fill").Gravity("face") // Opcional: redimensionar
+                Transformation = new Transformation().Height(500).Width(500).Crop("fill").Gravity("face") 
             };
             uploadResult = await _cloudinary.UploadAsync(uploadParams);
         }
@@ -38,20 +38,44 @@ public class CloudinaryService : IPhotoService
         return (uploadResult.SecureUrl.ToString(), uploadResult.PublicId);
     }
 
-    public async Task<(string Url, string PublicId)> AddVideoAsync(IFormFile file)
-    {
-        //TODO terminar
-        
-    }
-
-    public async Task<string> DeleteVideoAsync(string file)
-    {
-        //TODO terminar
-    }
-    
     public async Task<string> DeletePhotoAsync(string publicId)
     {
         var deleteParams = new DeletionParams(publicId);
+        var result = await _cloudinary.DestroyAsync(deleteParams);
+        return result.Result == "ok" ? result.Result : null;
+    }
+    
+
+    public async Task<(string Url, string PublicId)> AddVideoAsync(IFormFile file)
+    {
+        var uploadResult = new VideoUploadResult();
+
+        if (file.Length > 0)
+        {
+            using var stream = file.OpenReadStream();
+            var uploadParams = new VideoUploadParams
+            {
+                File = new FileDescription(file.FileName, stream),
+                Folder = "gorgonix/videos",
+                EagerTransforms = new List<Transformation>()
+                {
+                    new Transformation().Width(1280).Height(720).Crop("limit")
+                }
+            };
+            
+            uploadResult = await _cloudinary.UploadLargeAsync(uploadParams);
+        }
+
+        return (uploadResult.SecureUrl.ToString(), uploadResult.PublicId);
+    }
+
+    public async Task<string> DeleteVideoAsync(string publicId)
+    {
+        var deleteParams = new DeletionParams(publicId)
+        {
+            ResourceType = ResourceType.Video 
+        };
+
         var result = await _cloudinary.DestroyAsync(deleteParams);
         return result.Result == "ok" ? result.Result : null;
     }

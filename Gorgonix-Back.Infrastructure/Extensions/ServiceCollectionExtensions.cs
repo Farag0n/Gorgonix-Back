@@ -23,6 +23,7 @@ public static class ServiceCollectionExtensions
         );
         
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IMovieRepository, MovieRepository>();
         services.AddScoped<IPhotoService, CloudinaryService>();
         return services;
     }
