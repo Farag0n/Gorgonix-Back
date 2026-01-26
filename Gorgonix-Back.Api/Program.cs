@@ -21,6 +21,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 // Application Services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMovieService, MovieService>();
 
 // Utility Services
 builder.Services.AddScoped<TokenService>();

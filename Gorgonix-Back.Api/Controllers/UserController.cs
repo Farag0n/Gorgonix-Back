@@ -38,7 +38,6 @@ public class UserController : ControllerBase
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        // Validación de seguridad: ¿Es el propio usuario o es un admin?
         var currentUserId = GetCurrentUserId();
         if (!User.IsInRole("Admin") && currentUserId != id)
         {
@@ -117,7 +116,6 @@ public class UserController : ControllerBase
         
         try
         {
-            // Usamos CreateUserAsync (que devuelve UserResponseDto) en lugar de RegisterAsync (que devuelve Tokens)
             var createdUser = await _userService.CreateUserAsync(registerDto);
             
             return CreatedAtAction(nameof(GetById), new { id = createdUser.Id }, createdUser);
@@ -136,11 +134,9 @@ public class UserController : ControllerBase
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UserUpdateDto userUpdateDto)
     {
-        // Validación del modelo
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-    
-        // Seguridad: Solo Admin o el mismo usuario pueden editar
+        
         var currentUserId = GetCurrentUserId();
         var isAdmin = User.IsInRole("Admin");
     
@@ -166,7 +162,6 @@ public class UserController : ControllerBase
         }
     }
     
-    // DELETE: api/User/{id}
     [HttpDelete("{id:guid}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(Guid id)
@@ -185,7 +180,6 @@ public class UserController : ControllerBase
         }
     }
     
-    // DELETE: api/User/{id}
     [HttpDelete("SoftDete/{id:guid}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> SoftDelete(Guid id)
@@ -203,8 +197,7 @@ public class UserController : ControllerBase
             return BadRequest(new { Message = ex.Message });
         }
     }
-
-    // Método privado para obtener el ID del usuario logueado desde el Token JWT
+    
     private Guid GetCurrentUserId()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
