@@ -1,0 +1,6 @@
+@Gorgonix_Back.Api_HostAddress = http://localhost:5195
+
+GET {{Gorgonix_Back.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gorgonix-Back.Api", "Gorgonix-Back.Api\Gorgonix-Back.Api.csproj", "{79A9A7CC-961F-467D-8788-947DBE3EF979}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gorgonix-Back.Application", "Gorgonix-Back.Application\Gorgonix-Back.Application.csproj", "{C0BC5557-7DCD-4B80-8231-962C7A7F86A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gorgonix-Back.Domain", "Gorgonix-Back.Domain\Gorgonix-Back.Domain.csproj", "{F2DE882C-207F-4419-AFFC-DF6A25251722}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gorgonix-Back.Infrastructure", "Gorgonix-Back.Infrastructure\Gorgonix-Back.Infrastructure.csproj", "{0A1D271D-FDBB-4349-8292-4A0679936844}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{79A9A7CC-961F-467D-8788-947DBE3EF979}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79A9A7CC-961F-467D-8788-947DBE3EF979}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79A9A7CC-961F-467D-8788-947DBE3EF979}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79A9A7CC-961F-467D-8788-947DBE3EF979}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0BC5557-7DCD-4B80-8231-962C7A7F86A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0BC5557-7DCD-4B80-8231-962C7A7F86A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0BC5557-7DCD-4B80-8231-962C7A7F86A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0BC5557-7DCD-4B80-8231-962C7A7F86A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2DE882C-207F-4419-AFFC-DF6A25251722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2DE882C-207F-4419-AFFC-DF6A25251722}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2DE882C-207F-4419-AFFC-DF6A25251722}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2DE882C-207F-4419-AFFC-DF6A25251722}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A1D271D-FDBB-4349-8292-4A0679936844}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A1D271D-FDBB-4349-8292-4A0679936844}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A1D271D-FDBB-4349-8292-4A0679936844}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A1D271D-FDBB-4349-8292-4A0679936844}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
