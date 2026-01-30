@@ -1,0 +1,26 @@
+﻿services:
+  # Servicio de la API
+  gorgonix-api:
+    image: gorgonix-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:8080" # Mapea puerto 5000 de tu PC al 8080 del contenedor
+    environment:
+    depends_on:
+      - gorgonix-db
+
+  # Servicio de Base de Datos MySQL
+  gorgonix-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: gorgonix_db
+    ports:
+      - "3307:3306" # Puerto 3307 en tu PC para que no choque si tienes MySQL instalado
+    volumes:
+      - mysql_data:/var/lib/mysql # Persistencia de datos
+
+volumes:
+  mysql_data:

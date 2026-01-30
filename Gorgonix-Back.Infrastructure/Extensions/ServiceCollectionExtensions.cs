@@ -22,9 +22,14 @@ public static class ServiceCollectionExtensions
             )
         );
         
+        // Repositorios
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IMovieRepository, MovieRepository>();
-        services.AddScoped<IPhotoService, CloudinaryService>();
+        services.AddScoped<IContentRepository, ContentRepository>();
+        services.AddScoped<IGenreRepository, GenreRepository>();
+        services.AddScoped<IProfileRepository, ProfileRepository>();
+        services.AddScoped<IReviewRepository, ReviewRepository>();
+        services.AddScoped<IMediaService, CloudinaryService>();
+        
         return services;
     }
 }

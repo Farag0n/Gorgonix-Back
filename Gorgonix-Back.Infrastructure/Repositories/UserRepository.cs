@@ -17,7 +17,6 @@ public class UserRepository : IUserRepository
         _context = context;
         _logger = logger;
     }
-    //TODO mejorar los logs para cuando algo bueno o malo este pasando
 
     public async Task<IEnumerable<User>> GetAllAsync()
     {
@@ -37,6 +36,7 @@ public class UserRepository : IUserRepository
         try
         {
             return await _context.Users
+                .Include(u => u.Profiles) // <--- ¡IMPORTANTE! Carga los perfiles
                 .FirstOrDefaultAsync(u => u.Id == userId);
         }
         catch (Exception e)
@@ -51,6 +51,7 @@ public class UserRepository : IUserRepository
         try
         {
             return await _context.Users
+                .Include(u => u.Profiles)
                 .FirstOrDefaultAsync(u => u.UserName == userName);
         }
         catch (Exception e)
@@ -65,6 +66,7 @@ public class UserRepository : IUserRepository
         try
         {
             return await _context.Users
+                .Include(u => u.Profiles) // <--- ¡IMPORTANTE! Para el Login
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
         catch (Exception e)
@@ -108,7 +110,8 @@ public class UserRepository : IUserRepository
     {
         try
         {
-            var existing = await _context.Users.FindAsync(user.Id);
+            // Verificamos existencia sin trackear para evitar conflictos de concurrencia
+            var existing = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == user.Id);
 
             if (existing != null)
             {

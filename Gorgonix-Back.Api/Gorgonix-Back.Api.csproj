@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Gorgonix_Back.Api</RootNamespace>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +28,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Gorgonix-Back.Application\Gorgonix-Back.Application.csproj" />
     <ProjectReference Include="..\Gorgonix-Back.Infrastructure\Gorgonix-Back.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
   </ItemGroup>
 
 </Project>

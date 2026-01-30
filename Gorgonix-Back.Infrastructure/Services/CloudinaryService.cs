@@ -1,12 +1,12 @@
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using Gorgonix_Back.Application.Interfaces;
+using Gorgonix_Back.Application.Interfaces; // Asegúrate de que IMediaService esté aquí
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace Gorgonix_Back.Infrastructure.Services;
 
-public class CloudinaryService : IPhotoService
+public class CloudinaryService : IMediaService // <--- CAMBIO IMPORTANTE
 {
     private readonly Cloudinary _cloudinary;
 

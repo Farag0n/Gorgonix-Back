@@ -4,12 +4,11 @@ namespace Gorgonix_Back.Domain.Interfaces;
 
 public interface IReviewRepository
 {
-    Task<IEnumerable<Review?>> GetAllReviewsByProfile(Guid profileId);
-    Task<IEnumerable<Review?>> GetAllReviewsByContent(Guid contentId);
-    Task<Content?> GetReviewByIdAsync(Guid reviewId);
+    Task<IEnumerable<Review>> GetAllReviewsByProfileIdAsync(Guid profileId);
+    Task<IEnumerable<Review>> GetAllReviewsByContentIdAsync(Guid contentId);
+    Task<Review?> GetReviewByIdAsync(Guid reviewId); // Corregido retorno
     
-    Task<Content> CreateReviewAsync(Review review);
-    Task<Content?> UpdateReviewAsync(Review review, Guid reviewId);
-    Task<Content?> DeleteReviewAsync(Guid reviewId);
-
+    Task AddAsync(Review review);
+    Task UpdateAsync(Review review);
+    Task DeleteAsync(Review review);
 }

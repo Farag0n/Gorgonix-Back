@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gorgonix_Back.Api.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize] // Por defecto, todo requiere estar logueado
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -19,8 +20,9 @@ public class UserController : ControllerBase
         _logger = logger;
     }
     
+    // GET: api/User
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")] // Solo Admin ve todos
     public async Task<IActionResult> GetAll()
     {
         try 
@@ -35,9 +37,11 @@ public class UserController : ControllerBase
         }
     }
     
+    // GET: api/User/{id}
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
+        // Seguridad: Solo el Admin o el dueño de la cuenta pueden ver sus detalles completos
         var currentUserId = GetCurrentUserId();
         if (!User.IsInRole("Admin") && currentUserId != id)
         {
@@ -57,6 +61,7 @@ public class UserController : ControllerBase
         }
     }
     
+    // GET: api/User/username/{username}
     [HttpGet("username/{username}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetByUserName(string username)
@@ -64,11 +69,11 @@ public class UserController : ControllerBase
         try
         {
             var user = await _userService.GetUserByUserNameAsync(username);
+            
+            // Tu servicio devuelve null si no encuentra, así que validamos
+            if (user == null) return NotFound(new { Message = "Usuario no encontrado" });
+            
             return Ok(user);
-        }
-        catch (KeyNotFoundException)
-        {
-            return NotFound(new { Message = "Usuario no encontrado" });
         }
         catch (Exception ex)
         {
@@ -76,6 +81,7 @@ public class UserController : ControllerBase
         }
     }
     
+    // GET: api/User/email/{email}
     [HttpGet("email/{email}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetByEmail(string email)
@@ -92,9 +98,10 @@ public class UserController : ControllerBase
         }
     }
 
+    // GET: api/User/deleted
     [HttpGet("deleted")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> GetDeletdUsers()
+    public async Task<IActionResult> GetDeletedUsers()
     {
         try
         {
@@ -107,6 +114,7 @@ public class UserController : ControllerBase
         }
     }
     
+    // POST: api/User (Creación manual por Admin)
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create([FromBody] RegisterDto registerDto)
@@ -118,9 +126,12 @@ public class UserController : ControllerBase
         {
             var createdUser = await _userService.CreateUserAsync(registerDto);
             
+            if (createdUser == null) 
+                return BadRequest(new { Message = "No se pudo crear el usuario" });
+            
             return CreatedAtAction(nameof(GetById), new { id = createdUser.Id }, createdUser);
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidOperationException ex) // Captura duplicados (Email/Username)
         {
             return Conflict(new { Message = ex.Message });
         }
@@ -131,27 +142,30 @@ public class UserController : ControllerBase
         }
     }
     
+    // PUT: api/User/{id}
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UserUpdateDto userUpdateDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
+        // Seguridad: Solo Admin o el propio usuario
         var currentUserId = GetCurrentUserId();
-        var isAdmin = User.IsInRole("Admin");
-    
-        if (!isAdmin && currentUserId != id)
+        if (!User.IsInRole("Admin") && currentUserId != id)
+        {
             return Forbid();
+        }
 
         try
         {
             var updatedUser = await _userService.UpdateUserAsync(id, userUpdateDto);
+            
             if (updatedUser == null) 
                 return NotFound(new { Message = "Usuario no encontrado" });
 
             return Ok(updatedUser);
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidOperationException ex) // Captura si intenta actualizar a un email/username que ya existe
         {
             return Conflict(new { Message = ex.Message });
         }
@@ -162,8 +176,9 @@ public class UserController : ControllerBase
         }
     }
     
+    // DELETE: api/User/{id} (Hard Delete)
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")] // Solo admin borra físicamente
     public async Task<IActionResult> Delete(Guid id)
     {
         try
@@ -171,7 +186,7 @@ public class UserController : ControllerBase
             var deletedUser = await _userService.DeleteUserAsync(id);
             if (deletedUser == null) return NotFound(new { Message = "Usuario no encontrado" });
 
-            return Ok(new { Message = "Usuario eliminado correctamente", User = deletedUser });
+            return Ok(new { Message = "Usuario eliminado permanentemente", User = deletedUser });
         }
         catch (Exception ex)
         {
@@ -180,16 +195,17 @@ public class UserController : ControllerBase
         }
     }
     
-    [HttpDelete("SoftDete/{id:guid}")]
+    // DELETE: api/User/soft/{id} (Soft Delete)
+    [HttpDelete("soft/{id:guid}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> SoftDelete(Guid id)
     {
         try
         {
             var deletedUser = await _userService.SoftDeleteUserAsync(id);
-            if (deletedUser == null) return NotFound(new { Message = "Usuario no encontrado" });
+            if (deletedUser == null) return NotFound(new { Message = "Usuario no encontrado o ya eliminado" });
 
-            return Ok(new { Message = "Usuario eliminado correctamente", User = deletedUser });
+            return Ok(new { Message = "Usuario desactivado correctamente", User = deletedUser });
         }
         catch (Exception ex)
         {
@@ -198,6 +214,7 @@ public class UserController : ControllerBase
         }
     }
     
+    // Helper para extraer ID del token
     private Guid GetCurrentUserId()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Gorgonix_Back.Infrastructure.Data.Configurations;
 
-public class UserConfigurations :  IEntityTypeConfiguration<User>
+public class UserConfigurations : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
@@ -15,12 +15,12 @@ public class UserConfigurations :  IEntityTypeConfiguration<User>
         
         builder.HasIndex(u => u.UserName).IsUnique();
 
-        //configuracion de la propiedad username
+        // Configuración de la propiedad username
         builder.Property(u => u.UserName)
             .IsRequired()
             .HasMaxLength(100); 
 
-        //configuracion del value object Email
+        // Configuración del Value Object Email
         builder.Property(u => u.Email)
             .HasConversion(
                 email => email.Value,
@@ -28,17 +28,26 @@ public class UserConfigurations :  IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(100);
 
-        //configuracion del rol de usuario
+        // Configuración del rol de usuario
         builder.Property(u => u.UserRole)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(20); // Reduje esto a 20, 100 es mucho para un Enum convertido a string
 
-        //configuracion del hash de la contraseña
+        // Configuración del hash de la contraseña
         builder.Property(u => u.PasswordHash)
             .IsRequired();
 
-        //configracion del refresh token es opcional y tiene tamaño maximo
+        // Configuración del refresh token
         builder.Property(u => u.RefreshToken)
             .HasMaxLength(500);
+
+        // =========================================================
+        // RELACIÓN CON PROFILES (Uno a Muchos)
+        // =========================================================
+        // Un Usuario tiene muchos Perfiles
+        builder.HasMany(u => u.Profiles)
+            .WithOne(p => p.User)
+            .HasForeignKey(p => p.UserId)
+            .OnDelete(DeleteBehavior.Cascade); // Si borras al User, se borran sus Perfiles
     }
 }

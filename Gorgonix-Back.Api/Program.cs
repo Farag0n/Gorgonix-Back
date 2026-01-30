@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Gorgonix_Back.Infrastructure.Extensions;
+using Gorgonix_Back.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 //TODO ==================================================================
@@ -21,7 +22,10 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 // Application Services
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IContentService, ContentService>(); // Lógica de negocio
+builder.Services.AddScoped<IMediaService, CloudinaryService>(); // Archivos
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
 
 // Utility Services
 builder.Services.AddScoped<TokenService>();
@@ -136,6 +140,8 @@ if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Local
 //export ASPNETCORE_ENVIRONMENT=Local dotnet run --project ProductCatalog.Api
 
 //app.UseHttpsRedirection();
+
+app.UseMiddleware<Gorgonix_Back.Api.Middlewares.ExceptionMiddleware>();
 app.UseCors(corsPolicyName);
 app.UseAuthentication();
 app.UseAuthorization();

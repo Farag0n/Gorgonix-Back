@@ -10,5 +10,7 @@ public class UserResponseDto
     public string Email { get; set; }
     public string UserName { get; set; }
     public UserRole Role { get; set; }
-    public bool IsDeleted { get; set; }
+    
+    // Agregamos esto para que el Front sepa qué perfiles tiene el usuario
+    public ICollection<ProfileResponseDto> Profiles { get; set; } = new List<ProfileResponseDto>();
 }
