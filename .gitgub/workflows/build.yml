@@ -1,0 +1,62 @@
+name: Build, Test and Analyze
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Build and Analyze
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. Obtener el código
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Importante para que SonarCloud analice todo el historial
+
+      # 2. Configurar Java 17 (Requerido por SonarScanner)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'zulu'
+
+      # 3. Configurar .NET 8
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+
+      # 4. Instalar herramienta de SonarScanner
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Install SonarCloud scanner
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+
+      # 5. INICIO DEL ANÁLISIS
+      # Reemplaza 'TU_ORG_KEY' y 'TU_PROJECT_KEY' con los datos de SonarCloud
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub lo provee solo
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # Tú lo configuraste en secrets
+        run: |
+          dotnet-sonarscanner begin /k:"TU_PROJECT_KEY" /o:"TU_ORG_KEY" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
+          
+          dotnet restore
+          dotnet build --no-restore
+          
+          # Correr Tests y generar reporte de cobertura para Sonar
+          dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          
+          dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
