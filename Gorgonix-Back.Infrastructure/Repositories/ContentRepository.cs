@@ -21,7 +21,7 @@ public class ContentRepository : IContentRepository
     {
         try
         {
-            return await _context.Movies
+            return await _context.Contents
                 .Include(c => c.Genre)
                 .AsNoTracking() // Optimización de lectura
                 .ToListAsync();
@@ -37,7 +37,7 @@ public class ContentRepository : IContentRepository
     {
         try
         {
-            return await _context.Movies
+            return await _context.Contents
                 .Where(c => c.GenreId == genreId)
                 .Include(c => c.Genre)
                 .AsNoTracking()
@@ -54,7 +54,7 @@ public class ContentRepository : IContentRepository
     {
         try
         {
-            return await _context.Movies
+            return await _context.Contents
                 .Include(c => c.Genre)
                 .FirstOrDefaultAsync(c => c.Title == title);
         }
@@ -71,7 +71,7 @@ public class ContentRepository : IContentRepository
         {
             if (string.IsNullOrWhiteSpace(searchTerm)) return new List<Content>();
 
-            return await _context.Movies
+            return await _context.Contents
                 .Include(c => c.Genre)
                 .Where(c => c.Title.Contains(searchTerm) || c.Description.Contains(searchTerm))
                 .AsNoTracking()
@@ -88,9 +88,9 @@ public class ContentRepository : IContentRepository
     {
         try
         {
-            return await _context.Movies
+            return await _context.Contents
                 .Include(c => c.Genre)
-                // Opcional: .Include(c => c.Reviews) si quieres ver reseñas al abrir la peli
+                .Include(c => c.Reviews) //incluir las reseñas al traer el contenido por ID
                 .FirstOrDefaultAsync(c => c.Id == contentId);
         }
         catch (Exception ex)
@@ -104,7 +104,7 @@ public class ContentRepository : IContentRepository
     {
         try
         {
-            await _context.Movies.AddAsync(content);
+            await _context.Contents.AddAsync(content);
             await _context.SaveChangesAsync();
         }
         catch (Exception ex)
@@ -118,7 +118,7 @@ public class ContentRepository : IContentRepository
     {
         try
         {
-            _context.Movies.Update(content);
+            _context.Contents.Update(content);
             await _context.SaveChangesAsync();
         }
         catch (Exception ex)
@@ -132,7 +132,7 @@ public class ContentRepository : IContentRepository
     {
         try
         {
-            _context.Movies.Remove(content);
+            _context.Contents.Remove(content);
             await _context.SaveChangesAsync();
         }
         catch (Exception ex)
