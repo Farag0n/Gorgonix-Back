@@ -9,7 +9,7 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options){}
     
     public DbSet<User> Users { get; set; }
-    public DbSet<Content> Movies { get; set; } // Ojo: En tu código original se llamaba Movies, pero es Content
+    public DbSet<Content> Contents { get; set; } // Ojo: En tu código original se llamaba Movies, pero es Content
     public DbSet<Genre> Genres { get; set; }
     public DbSet<Profile> Profiles { get; set; }
     public DbSet<Review> Reviews { get; set; }
