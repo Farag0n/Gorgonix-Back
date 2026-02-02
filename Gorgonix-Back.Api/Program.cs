@@ -29,7 +29,7 @@ builder.Services.AddScoped<IProfileService, ProfileService>();
 
 // Utility Services
 builder.Services.AddScoped<TokenService>();
-
+//eliminame
 
 
 // ===================== JWT Configuration =====================
