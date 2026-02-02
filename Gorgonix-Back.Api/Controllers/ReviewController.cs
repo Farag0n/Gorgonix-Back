@@ -17,8 +17,7 @@ public class ReviewController : ControllerBase
     {
         _reviewService = reviewService;
     }
-
-    // 1. Crear Reseña
+    
     [HttpPost]
     public async Task<IActionResult> AddReview([FromBody] ReviewCreateDto dto)
     {
@@ -36,16 +35,14 @@ public class ReviewController : ControllerBase
             return BadRequest(new { Message = ex.Message });
         }
     }
-
-    // 2. Ver Reseñas de una Película
+    
     [HttpGet("content/{contentId:guid}")]
     public async Task<IActionResult> GetByContent(Guid contentId)
     {
         var reviews = await _reviewService.GetReviewsByContentAsync(contentId);
         return Ok(reviews);
     }
-
-    // 3. Ver Reseñas de un Perfil (Mis reseñas)
+    
     [HttpGet("profile/{profileId:guid}")]
     public async Task<IActionResult> GetByProfile(Guid profileId)
     {
@@ -53,8 +50,7 @@ public class ReviewController : ControllerBase
         var reviews = await _reviewService.GetReviewsByProfileAsync(profileId);
         return Ok(reviews);
     }
-
-    // 4. Ver una reseña específica
+    
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -62,8 +58,7 @@ public class ReviewController : ControllerBase
         if (review == null) return NotFound(new { Message = "Reseña no encontrada" });
         return Ok(review);
     }
-
-    // 5. Actualizar Reseña
+    
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] ReviewUpdateDto dto)
     {
@@ -80,8 +75,7 @@ public class ReviewController : ControllerBase
             return BadRequest(new { Message = ex.Message });
         }
     }
-
-    // 6. Eliminar Reseña
+    
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {

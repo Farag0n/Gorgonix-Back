@@ -17,16 +17,13 @@ public class ContentController : ControllerBase
     {
         _contentService = contentService;
     }
-
-    // ================= PUBLIC / USER ROUTES =================
-    // Requieren saber qué Perfil está navegando para mostrar sus favoritos
     
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         try
         {
-            var profileId = GetProfileIdFromHeader(); // <--- IMPORTANTE
+            var profileId = GetProfileIdFromHeader();
             var contents = await _contentService.GetAllContentsAsync(profileId);
             return Ok(contents);
         }
@@ -86,8 +83,6 @@ public class ContentController : ControllerBase
         }
     }
 
-    // ================= ADMIN ROUTES =================
-
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create([FromForm] ContentCreateDto createDto)
@@ -133,19 +128,14 @@ public class ContentController : ControllerBase
             return BadRequest(new { Message = ex.Message });
         }
     }
-
-    // --- Helper para obtener el Perfil actual ---
+    
     private Guid GetProfileIdFromHeader()
     {
-        // El frontend debe enviar un header "X-Profile-Id" cuando el usuario selecciona un perfil
         if (Request.Headers.TryGetValue("X-Profile-Id", out var profileIdString) && 
             Guid.TryParse(profileIdString, out var profileId))
         {
             return profileId;
         }
-        
-        // Si no hay header, lanzamos excepción o retornamos Empty (según tu regla de negocio)
-        // Para Netflix, es obligatorio tener un perfil activo para ver contenido
         throw new ArgumentException("Cabecera 'X-Profile-Id' requerida");
     }
 }

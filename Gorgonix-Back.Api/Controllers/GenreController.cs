@@ -16,16 +16,14 @@ public class GenreController : ControllerBase
     {
         _genreService = genreService;
     }
-
-    // GET: api/genre
+    
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         var genres = await _genreService.GetAllGenresAsync();
         return Ok(genres);
     }
-
-    // POST: api/genre (Solo Admin)
+    
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create([FromBody] GenreCreateDto dto)

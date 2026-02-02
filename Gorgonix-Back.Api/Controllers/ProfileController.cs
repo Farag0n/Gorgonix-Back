@@ -17,8 +17,7 @@ public class ProfileController : ControllerBase
     {
         _profileService = profileService;
     }
-
-    // 1. Obtener mis perfiles
+    
     [HttpGet("my-profiles")]
     public async Task<IActionResult> GetMyProfiles()
     {
@@ -26,41 +25,37 @@ public class ProfileController : ControllerBase
         var profiles = await _profileService.GetProfilesByUserAsync(userId);
         return Ok(profiles);
     }
-
-    // 2. Obtener un perfil específico (Validando propiedad)
+    
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var profile = await _profileService.GetProfileByIdAsync(id);
         if (profile == null) return NotFound();
-
-        // Seguridad: Solo dejar ver si es el dueño
+        
         if (profile.UserId != GetCurrentUserId()) return Forbid();
 
         return Ok(profile);
     }
-
-    // 3. Crear Perfil
+    
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] ProfileCreateDto dto)
     {
         try
         {
-            dto.UserId = GetCurrentUserId(); // Forzar ID del token
+            dto.UserId = GetCurrentUserId();
             var profile = await _profileService.CreateProfileAsync(dto);
             return Ok(profile);
         }
         catch (InvalidOperationException ex)
         {
-            return BadRequest(new { Message = ex.Message }); // Límite de perfiles
+            return BadRequest(new { Message = ex.Message });
         }
         catch (Exception ex)
         {
             return BadRequest(new { Message = ex.Message });
         }
     }
-
-    // 4. Ver Favoritos
+    
     [HttpGet("{profileId:guid}/favorites")]
     public async Task<IActionResult> GetFavorites(Guid profileId)
     {
@@ -69,8 +64,7 @@ public class ProfileController : ControllerBase
         var favorites = await _profileService.GetFavoritesAsync(profileId);
         return Ok(favorites);
     }
-
-    // 5. Agregar/Quitar Favorito
+    
     [HttpPost("{profileId:guid}/toggle-favorite/{contentId:guid}")]
     public async Task<IActionResult> ToggleFavorite(Guid profileId, Guid contentId)
     {
@@ -90,8 +84,7 @@ public class ProfileController : ControllerBase
             return BadRequest(new { Message = ex.Message });
         }
     }
-
-    // --- Helpers ---
+    
     private Guid GetCurrentUserId()
     {
         var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
