@@ -22,15 +22,13 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 // Application Services
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IContentService, ContentService>(); // Lógica de negocio
-builder.Services.AddScoped<IMediaService, CloudinaryService>(); // Archivos
+builder.Services.AddScoped<IContentService, ContentService>();
+builder.Services.AddScoped<IMediaService, CloudinaryService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 
 // Utility Services
 builder.Services.AddScoped<TokenService>();
-
-
 
 // ===================== JWT Configuration =====================
 //Configures the authentication system to validate JWT tokens on HTTP requests.
@@ -62,7 +60,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new()
     {
-        Title = "Vox Poluli Api",
+        Title = "Gorgonix Back API",
         Version = "v1"
     });
 
