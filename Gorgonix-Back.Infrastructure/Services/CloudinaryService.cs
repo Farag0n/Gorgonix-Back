@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Gorgonix_Back.Infrastructure.Services;
 
-public class CloudinaryService : IMediaService // <--- CAMBIO IMPORTANTE
+public class CloudinaryService : IMediaService
 {
     private readonly Cloudinary _cloudinary;
 
